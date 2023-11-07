@@ -5,6 +5,7 @@ import {onValue } from "firebase/database";
 
 let map,directionsService,directionsRenderer;
 
+
 async function initMap(locations) {
     
     
@@ -66,7 +67,7 @@ async function specificIncidentMap(locations) {
     );
     const map = new google.maps.Map(document.getElementById("map"), {
         zoom: 15,
-        center: { lat: 52.23023, lng: -0.88680 },
+        center: { lat: userlocation.lat, lng: userlocation.lng },
         mapId: "University Of Northampton",
     });
 
@@ -127,6 +128,7 @@ function computeTotalDistance(result) {
   }
 
 $(document).ready(function(){
+    
     var incidents=[];
     if (window.location.href.indexOf("map") > -1) {
         // Code to run on the specific page
@@ -159,8 +161,44 @@ $(document).ready(function(){
         incidents.push(incident);
         specificIncidentMap(incidents);
     }
-        
+    
+    
     
 });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Get references to the HTML elements
+    const image = document.getElementById('image');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    
+    
+    
+    let currentImageIndex = 0;
+    
+    // Function to update the displayed image
+    function updateImage() {
+        image.src = imageUrls[currentImageIndex];
+    }
+    
+    // Event listener for the "Previous" button
+    prevBtn.addEventListener('click', function() {
+        currentImageIndex = (currentImageIndex - 1 + imageUrls.length) % imageUrls.length;
+        updateImage();
+    });
+    
+    // Event listener for the "Next" button
+    nextBtn.addEventListener('click', function() {
+        currentImageIndex = (currentImageIndex + 1) % imageUrls.length;
+        updateImage();
+    });
+    
+    // Initial display
+    updateImage();
+    
+    
+    });
+
 
 

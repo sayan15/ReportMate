@@ -27,24 +27,26 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::view('about', 'about')->name('about');
-
-    Route::get('users', [UserController::class, 'index'])->name('users.index');
-
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware('auth','role:admin')->group(function () {
+    Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/createUser', [ProfileController::class, 'create'])->name('users.create');
+    Route::post('/storeUser', [ProfileController::class, 'store'])->name('users.store');
+    Route::get('/admin/edit/{id}', [ProfileController::class, 'adminEdit'])->name('admin.edit');
+    Route::patch('/profile/{id}', [ProfileController::class, 'adminUpdate'])->name('adminProfile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');   
 });
 
 Route::middleware('auth')->group(function () {
     Route::get('/map',[MapController::class, 'index'])->name('map.index');
     Route::get('/incidentDetail/{key}',[MapController::class, 'getIncident'])->name('map.getIncident');
+    Route::patch('/store-firebase-data', [MapController::class, 'store'])->name('map.store');
 });
 
 	
 Route::get('/get-firebase-data', [FirebaseController::class, 'index'])->name('firebase.index');
-
-Route::get('/store-firebase-data', [MapController::class, 'store'])->name('map.store');
-
-
 
 require __DIR__.'/auth.php';

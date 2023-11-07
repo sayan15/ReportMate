@@ -31,16 +31,20 @@ class MapController extends Controller
     }
 
 
-    public function dstore() {
-        $locations = [
-            'lat' => 52.23059,
-            'lng' => -0.8869,
-            'title' => "University of Northampton",
-            'description' => "University in Northampton.",
-            'status'=>'no'
-        ];
+    public function store(Request $request) {
+        
+        $nodeRef =  $this->database->getReference($this->table.'/'.$request->input('key'));
 
-        $data =  $this->database->getReference($this->table)->push($locations);
+        // Retrieve the existing data at the specified location
+        $existingData = $this->database->getReference($this->table . '/' . $request->input('key'))->getValue();
+
+        // Merge the new status value with the existing data
+        $existingData['status'] = $request->input('status');
+
+        $nodeRef->set($existingData);
+
+        return redirect()->route('map.getIncident', ['key' =>$request->input('key')]) // Redirect to a page after successful user creation.
+        ->with('success', 'updated successfully'); // Flash a success message.
     }
 
     //get images of specific incidents
@@ -68,18 +72,26 @@ class MapController extends Controller
     {
         
         $locations = [];
+        $userLocation=[];
         $data =  $this->database->getReference($this->table.'/'.$key)->getValue();
         
         $locations[] = [
+            'key' => $key,
             'lat' => $data ['lat'],
             'lng' => $data ['lng'],
             'title' => $data ['title'],
             'description' => $data ['description'],
+            'status'=>$data['status'],
         ];
         //dd($locations[0]['description']);
         $imageUrls=$this->getPics();
-        
-        return view('map.incidentDetail')->with(['locations'=>$locations,'imageUrls'=>$imageUrls]);
+        //specific officer location
+        $userLocation=[
+            'lat'=>auth()->user()->lat,
+            'lng'=>auth()->user()->lng
+        ];
+
+        return view('map.incidentDetail')->with(['locations'=>$locations,'imageUrls'=>$imageUrls,'userLocation'=>$userLocation]);
     }
 
 }

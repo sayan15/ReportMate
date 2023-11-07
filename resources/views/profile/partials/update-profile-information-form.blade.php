@@ -12,8 +12,11 @@
     <form id="send-verification" method="post" action="{{ route('verification.send') }}">
         @csrf
     </form>
-
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    @if(auth()->user()->role=='admin')
+        <form method="post" action="{{ route('adminProfile.update', ['id' => $user->id]) }}" class="mt-6 space-y-6">
+    @else
+        <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    @endif
         @csrf
         @method('patch')
 
@@ -45,6 +48,18 @@
                     @endif
                 </div>
             @endif
+        </div>
+
+        <div>
+            <x-input-label for="lng" :value="__('Longitute')" />
+            <x-text-input id="lng" name="lng" type="text" class="mt-1 block w-full" :value="old('lng', $user->lng)" required autofocus autocomplete="lng" />
+            <x-input-error class="mt-2" :messages="$errors->get('lng')" />
+        </div>
+
+        <div>
+            <x-input-label for="lat" :value="__('Latitude')" />
+            <x-text-input id="lat" name="lat" type="text" class="mt-1 block w-full" :value="old('lat', $user->lat)" required autofocus autocomplete="lat" />
+            <x-input-error class="mt-2" :messages="$errors->get('lat')" />
         </div>
 
         <div class="flex items-center gap-4">

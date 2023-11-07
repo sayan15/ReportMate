@@ -27,11 +27,12 @@
                     <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase bg-gray-50 border-b">
                         <th class="px-4 py-3">Name</th>
                         <th class="px-4 py-3">Email</th>
+                        
                     </tr>
                     </thead>
                     <tbody class="bg-white divide-y">
                     @foreach($users as $user)
-                        <tr class="text-gray-700">
+                        <tr class="text-gray-700 cursor-pointer hover:bg-gray-100" onclick="window.location='{{ route('admin.edit', ['id' => $user->id]) }}';">
                             <td class="px-4 py-3 text-sm">
                                 {{ $user->name }}
                             </td>
@@ -47,6 +48,11 @@
                 {{ $users->links() }}
             </div>
         </div>
-
+        <div style="text-align: center;">
+            <a href="{{ route('users.create') }}">
+            <x-primary-button style="margin: 0 auto;">
+                {{ __('Add New Officer') }}
+            </x-primary-button>
+        </div>
     </div>
 </x-app-layout>
