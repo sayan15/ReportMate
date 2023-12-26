@@ -83,8 +83,28 @@ class ProfileController extends Controller
         $user->save();
 
         return Redirect::route('admin.edit', ['id' => $user->id])->with('status','profile-updated');
+        
     }
+    /**
+     * Delete the user's account.
+     */
+    public function destroyOtherAccount(Request $request, $id): RedirectResponse
+    {
+        $request->validateWithBag('userDeletion', [
+            'password' => ['required', 'current_password'],
+        ]);
+
+        $user = User::find($id);
     
+        if (!$user) {
+            // Handle the case where the user with the given ID is not found
+            // You can return a 404 error or a custom error page.
+        }else{
+            $user->delete();
+        }
+
+        return Redirect::route('users.index');
+    }
 
     /**
      * Delete the user's account.

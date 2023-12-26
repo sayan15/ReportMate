@@ -1,7 +1,7 @@
-import firebase from "./firebase";
+import { database} from "./firebase";
 import {ref,orderByChild,query,equalTo,get} from 'firebase/database';
 
-const db = ref(firebase,"Incidents");
+const db = ref(database,"Incidents");
 
 class firebaseDB {
   getAll() {

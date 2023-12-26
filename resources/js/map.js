@@ -42,7 +42,6 @@ async function initMap(locations) {
         marker.addListener("click", () => {
             infoWindow.setContent(position.lat + ", " + position.lng +", "+position.title);
             infoWindow.open(map, marker);
-            // Inside your Vue component
             
             if (window.location.href.indexOf("map") > -1) {
                 window.location.href =  "/incidentDetail/"+position.key;
@@ -138,11 +137,11 @@ $(document).ready(function(){
                 snapshot.forEach((childSnapshot) => {
                 
                 // Create a location object with the desired structure
-                if(childSnapshot.val().status=='no'){
+                if(childSnapshot.val().status=='Reported'){
                     const incident  = {
                     key:childSnapshot.key,
-                    lat: childSnapshot.val().lat,
-                    lng: childSnapshot.val().lng,
+                    lat: childSnapshot.val().latitude,
+                    lng: childSnapshot.val().longitude,
                     title: childSnapshot.val().title,
                     
                     description: childSnapshot.val().description,
@@ -156,8 +155,29 @@ $(document).ready(function(){
                 });
                 initMap(incidents);
         });
+        
+        //get all values from when onvalue is not triggerd
+        if(incidents.length==0){
+            console.log(locations);
+            for (var key in locations) {
+                if (locations.hasOwnProperty(key)) {
+                    var location = locations[key];
+                        var incident = {
+                            key: location.key,
+                            lat: location.lat,
+                            lng: location.lng,
+                            title: location.title,
+                            
+                            description: location.description,
+                        };
+                    }
+                    incidents.push(incident);
+            }
+            //call the map function
+            initMap(incidents);       
+        }
     }else{
-        const incident={key:"-NhBTGmG4VrGtP_HQhuC",lat:Speclocation[0].lat , lng:Speclocation[0].lng,title:Speclocation[0].title,description:Speclocation[0].description};
+        const incident={key:Speclocation[0].key,lat:Speclocation[0].lat , lng:Speclocation[0].lng,title:Speclocation[0].title,description:Speclocation[0].description};
         incidents.push(incident);
         specificIncidentMap(incidents);
     }
@@ -179,7 +199,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to update the displayed image
     function updateImage() {
-        image.src = imageUrls[currentImageIndex];
+        if(imageUrls.length>0){
+            image.src = imageUrls[currentImageIndex];
+        }
     }
     
     // Event listener for the "Previous" button

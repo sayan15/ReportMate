@@ -33,12 +33,43 @@
             <li class="relative px-6 py-3">
                 <x-nav-link href="{{ route('map.index') }}" :active="request()->routeIs('map.index')">
                 <x-slot name="icon">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 69 24" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Replace this path with the map icon SVG path -->
-                            <path d="M23.143 37.881c4.178-6.076 9.957-15.809 9.957-23.164a14.718 14.718 0 0 0-29.435 0c0 7.357 5.783 17.094 9.961 23.168C6.3 38.391 0 40.074 0 42.858 0 46.235 9.248 48 18.383 48s18.384-1.766 18.384-5.143c0-2.782-6.293-4.47-13.624-4.976zM5.121 14.717a13.264 13.264 0 0 1 26.527 0c0 9.492-10.665 23.852-13.264 27.209-2.598-3.357-13.263-17.713-13.263-27.209zm13.262 31.829c-10.334 0-16.929-2.184-16.929-3.688 0-1.309 5.03-3.123 13.155-3.57a91.912 91.912 0 0 0 3.209 4.273.729.729 0 0 0 1.129 0 93.58 93.58 0 0 0 3.213-4.277c8.125.447 13.151 2.266 13.151 3.574.002 1.504-6.593 3.688-16.928 3.688z"/><path d="M26.383 14.848a8 8 0 1 0-8 8 8.009 8.009 0 0 0 8-8zm-14.545 0a6.546 6.546 0 1 1 6.545 6.545 6.555 6.555 0 0 1-6.545-6.545z"/>
-                        </svg>
+                    <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M21 10L12 1 3 10"></path>
+                        <path d="M21 10v11a1 1 0 01-1 1H4a1 1 0 01-1-1V10"></path>
+                        <path d="M14 11l-2 1.5-2-1.5V3h4v8z"></path>
+                    </svg>
                 </x-slot>
                     {{ __('Map View') }}
+                </x-nav-link>
+            </li>
+
+            <li class="relative px-6 py-3">
+                <x-nav-link href="{{ route('sendNotification') }}" :active="request()->routeIs('sendNotification')">
+                    <x-slot name="icon">
+                        <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M15 17h5l-1.5-1.5"></path>
+                            <path d="M18 12V9c0-1.1-.9-2-2-2h-1V5c0-.6-.4-1-1-1s-1 .4-1 1v2H9c-1.1 0-2 .9-2 2v3"></path>
+                            <path d="M5 17h5l1.5-1.5"></path>
+                            <path d="M13 21v-1"></path>
+                            <path d="M11 21v-1"></path>
+                        </svg>
+                    </x-slot>
+                    {{ __('Send Notification') }}
+                </x-nav-link>
+            </li>
+
+            <li class="relative px-6 py-3">
+                <x-nav-link href="{{ route('report') }}" :active="request()->routeIs('report')">
+                    <x-slot name="icon">
+                        <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
+                             stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                             <path d="M9 2H5a2 2 0 00-2 2v16a2 2 0 002 2h14a2 2 0 002-2V8l-6-6z"></path>
+                             <path d="M9 2v6h6"></path>
+                        </svg>
+                    </x-slot>
+                    {{ __('Reports') }}
                 </x-nav-link>
             </li>
 
@@ -54,34 +85,6 @@
                 </x-nav-link>
             </li>
 
-            <li class="relative px-6 py-3">
-                <button class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                        @click="toggleMultiLevelMenu" aria-haspopup="true">
-                <span class="inline-flex items-center">
-                    <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
-                        <path d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
-                    </svg>
-                    <span class="ml-4">Two-level menu</span>
-                </span>
-                    <svg class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                              clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-                <template x-if="isMultiLevelMenuOpen">
-                    <ul x-transition:enter="transition-all ease-in-out duration-300"
-                        x-transition:enter-start="opacity-25 max-h-0" x-transition:enter-end="opacity-100 max-h-xl"
-                        x-transition:leave="transition-all ease-in-out duration-300"
-                        x-transition:leave-start="opacity-100 max-h-xl" x-transition:leave-end="opacity-0 max-h-0"
-                        class="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark:text-gray-400 dark:bg-gray-900"
-                        aria-label="submenu">
-                        <li class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
-                            <a class="w-full" href="#">Child menu</a>
-                        </li>
-                    </ul>
-                </template>
-            </li>
         </ul>
     </div>
 </aside>

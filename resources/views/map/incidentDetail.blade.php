@@ -2,7 +2,7 @@
   var Speclocation = <?php echo json_encode($locations); ?>;
   const imageUrls = <?php echo json_encode($imageUrls); ?>;
   const userlocation= <?php echo json_encode($userLocation); ?>;
-  console.log(userlocation);
+  console.log(imageUrls);
 </script>
 
 @vite(['resources/js/map.js'])
@@ -44,8 +44,9 @@
                     </label>
                     <div class="flex flex-nowrap mx-1 mb-6">
                       <select name="status" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white text-lg font-semibold hover:bg-white hover:shadow-md hover:border-blue-500" id="grid-status">
-                        <option value="no" @if ($locations[0]['status'] == 'no') selected @endif>Not Attended</option>
-                        <option value="accessed" @if ($locations[0]['status'] == 'accessed') selected @endif>Attended</option>
+                        <option value="Reported" @if ($locations[0]['status'] == 'Reported') selected @endif>Not Attended</option>
+                        <option value="In progress" @if ($locations[0]['status'] == 'In Progress') selected @endif>In Progress</option>
+                        <option value="Closed" @if ($locations[0]['status'] == 'Closed') selected @endif>Closed</option>
                     </select>
                         <x-primary-button type="submit" class="ml-3 hover:bg-blue-600" style="width: 160px; height: 48px;font-size: 10px;">
                             {{ __('Change Status') }}

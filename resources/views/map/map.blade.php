@@ -1,5 +1,8 @@
 
 @vite(['resources/js/map.js'])
+<script type="text/javascript">
+    var locations = <?php echo json_encode($locations); ?>;
+</script>
 <x-app-layout>
     
         <div class="py-12">

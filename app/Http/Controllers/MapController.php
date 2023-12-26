@@ -18,14 +18,25 @@ class MapController extends Controller
     public function index()
     {
         $locations = [];
+        try {
         $data =  $this->database->getReference($this->table)->getValue();
         foreach ($data as $key => $values) {
             $locations[] = [
-                'lat' => $values['lat'],
-                'lng' => $values['lng'],
-                'title' => $values['title'],
+                'key' => $key,
+                'crime_type' => $values['crime_type'],
                 'description' => $values['description'],
+                'generated_at' => $values['generated_at'],
+                'happenedAt' => $values['happenedAt'],
+                'lat' =>$values['latitude'],
+                'lng' => $values['longitude'],
+                'officer_id' => $values['officer_id'],
+                'phone' => $values['phone'],
+                'status' => $values['status'],
+                'title' => $values['title'],
+                'updated_at' => $values['updated_at']
             ];
+        }}catch (\Exception $e) {
+            // You might want to log this exception or handle it in a way other than just showing the dashboard
         }
         return view('map.map')->with('locations',$locations);
     }
@@ -40,6 +51,8 @@ class MapController extends Controller
 
         // Merge the new status value with the existing data
         $existingData['status'] = $request->input('status');
+        $existingData['updated_at'] = date('Y-m-d H:i:s');
+        $existingData['officer_id'] = auth()->user()->id;
 
         $nodeRef->set($existingData);
 
@@ -48,23 +61,29 @@ class MapController extends Controller
     }
 
     //get images of specific incidents
-    public function getPics() {
-        $storageClient = $this->storage->getStorageClient();
-        $defaultBucket = $this->storage->getBucket();
-        
-          
-        //$defaultBucket ->upload(asset('public/images/login-office.jpeg'), ['name' => "incidents/-NhBQurPiBLaAQLsSTxt/login.jpeg"]); 
-        // List objects (images) in the bucket
-        $objects = $defaultBucket->objects(['prefix' => 'incidents/-NhBQurPiBLaAQLsSTxt']);
-
+    public function getPics(String $key) {
         $imageUrls = [];
+        try {
+            $storageClient = $this->storage->getStorageClient();
+            $defaultBucket = $this->storage->getBucket();
+            
+            // List objects (images) in the bucket with the specified prefix
+            $objects = $defaultBucket->objects(['prefix' => 'incidents/'.$key]);
+        
+
             // Iterate through the objects
-        foreach ($objects as $object) {
-            $imageUrl = $object->signedUrl(new \DateTime('+1 hour'));
-            $imageUrls []= $imageUrl ;
+            foreach ($objects as $object) {
+                // Generate a signed URL for each object, valid for 1 hour
+                $imageUrl = $object->signedUrl(new \DateTime('+1 hour'));
+                $imageUrls []= $imageUrl;
+            }
+            
+            return $imageUrls;
+        } catch (\Exception $e) {
+            // If an error occurs (e.g., bucket does not exist), return an empty array
+            return $imageUrls;
         }
         
-        return $imageUrls;
     }
     
     //get details of the specific incident
@@ -77,14 +96,20 @@ class MapController extends Controller
         
         $locations[] = [
             'key' => $key,
-            'lat' => $data ['lat'],
-            'lng' => $data ['lng'],
-            'title' => $data ['title'],
-            'description' => $data ['description'],
-            'status'=>$data['status'],
+            'crime_type' => $data['crime_type'],
+            'description' => $data['description'],
+            'generated_at' => $data['generated_at'],
+            'happenedAt' => $data['happenedAt'],
+            'lat' => $data['latitude'],
+            'lng' => $data['longitude'],
+            'officer_id' => $data['officer_id'],
+            'phone' => $data['phone'],
+            'status' => $data['status'],
+            'title' => $data['title'],
+            'updated_at' => $data['updated_at']
         ];
         //dd($locations[0]['description']);
-        $imageUrls=$this->getPics();
+        $imageUrls=$this->getPics($key);
         //specific officer location
         $userLocation=[
             'lat'=>auth()->user()->lat,
