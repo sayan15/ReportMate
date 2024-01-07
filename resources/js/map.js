@@ -14,12 +14,14 @@ async function initMap(locations) {
     const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary(
         "marker",
     );
-    if(userlocation.lat!=null && userlocation.lng!=null){
-        var latitude=userlocation.lat;
-        var longitude=userlocation.lng;
+    var latitude, longitude;
+
+    if(userlocation.lat != null && userlocation.lng != null){
+        latitude = Number(userlocation.lat);
+        longitude = Number(userlocation.lng);
     }else{
-        var latitude=52.23023;
-        var longitude=-0.88680;
+        latitude = 52.23023;   // These are already numbers
+        longitude = -0.88680;  // No need for conversion
     }
     const map = new google.maps.Map(document.getElementById("map"), {
         zoom: 15,
@@ -83,12 +85,14 @@ async function specificIncidentMap(locations) {
     directionsRenderer=new google.maps.DirectionsRenderer();
     directionsRenderer.setMap(map);
 
-    if(userlocation.lat!=null && userlocation.lng!=null){
-        var latitude=userlocation.lat;
-        var longitude=userlocation.lng;
+    var latitude, longitude;
+
+    if(userlocation.lat != null && userlocation.lng != null){
+        latitude = Number(userlocation.lat);
+        longitude = Number(userlocation.lng);
     }else{
-        var latitude=52.23023;
-        var longitude=-0.88680;
+        latitude = 52.23023;   // These are already numbers
+        longitude = -0.88680;  // No need for conversion
     }
 
     var start = new google.maps.LatLng(latitude, longitude);
