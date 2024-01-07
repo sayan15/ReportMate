@@ -18,6 +18,7 @@ class MapController extends Controller
     public function index()
     {
         $locations = [];
+        $userLocation=[];
         try {
         $data =  $this->database->getReference($this->table)->getValue();
         foreach ($data as $key => $values) {
@@ -37,28 +38,44 @@ class MapController extends Controller
             ];
         }}catch (\Exception $e) {
             // You might want to log this exception or handle it in a way other than just showing the dashboard
+
         }
-        return view('map.map')->with('locations',$locations);
+        //specific officer location
+        $userLocation=[
+            'lat'=>auth()->user()->lat,
+            'lng'=>auth()->user()->lng,
+            'role'=>auth()->user()->role
+        ];
+        return view('map.map')->with(['locations'=>$locations ,'userLocation'=>$userLocation]);
     }
 
 
     public function store(Request $request) {
-        
-        $nodeRef =  $this->database->getReference($this->table.'/'.$request->input('key'));
-
+    
+        $nodeRef = $this->database->getReference($this->table . '/' . $request->input('key'));
+    
         // Retrieve the existing data at the specified location
         $existingData = $this->database->getReference($this->table . '/' . $request->input('key'))->getValue();
-
+    
+        // Check if existing data is null or secret key is incorrect
+        if (is_null($existingData) || $existingData['secret'] !== 'Sayan') {
+            return redirect()->back()->withErrors('Unauthorized access.');
+        }
+    
         // Merge the new status value with the existing data
         $existingData['status'] = $request->input('status');
         $existingData['updated_at'] = date('Y-m-d H:i:s');
         $existingData['officer_id'] = auth()->user()->id;
-
+    
+        // Keep the secret key in the data
+        $existingData['secret'] = 'Sayan';
+    
         $nodeRef->set($existingData);
-
-        return redirect()->route('map.getIncident', ['key' =>$request->input('key')]) // Redirect to a page after successful user creation.
-        ->with('success', 'updated successfully'); // Flash a success message.
+    
+        return redirect()->route('map.getIncident', ['key' => $request->input('key')])
+            ->with('success', 'updated successfully'); // Flash a success message.
     }
+    
 
     //get images of specific incidents
     public function getPics(String $key) {

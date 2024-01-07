@@ -2,6 +2,8 @@
 @vite(['resources/js/map.js'])
 <script type="text/javascript">
     var locations = <?php echo json_encode($locations); ?>;
+    const userlocation= <?php echo json_encode($userLocation); ?>;
+    console.log(userlocation);
 </script>
 <x-app-layout>
     

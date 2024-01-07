@@ -21,7 +21,7 @@ $(document).ready(function(){
 
                         }
                         notAccessedIncidents.push(incident);
-                    }else if(childSnapshot.val().status=='In Progress'){
+                    }else if(childSnapshot.val().status=='In_progress'){
                         const incident  = {
                             key:childSnapshot.key,
                             status: childSnapshot.val().status,
@@ -62,10 +62,10 @@ $(document).ready(function(){
                                 status: location.status,
                             };
                             notAccessedIncidents.push(incident);
-                        }else if(childSnapshot.val().status=='In Progress'){
+                        }else if(location.status=='In_progress'){
                             const incident  = {
-                                key:childSnapshot.key,
-                                status: childSnapshot.val().status,
+                                key: location.key,
+                                status: location.status,
         
                                 }
                                 inProgressIncidents_array.push(incident);

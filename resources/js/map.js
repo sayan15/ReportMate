@@ -14,9 +14,16 @@ async function initMap(locations) {
     const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary(
         "marker",
     );
+    if(userlocation.lat!=null && userlocation.lng!=null){
+        var latitude=userlocation.lat;
+        var longitude=userlocation.lng;
+    }else{
+        var latitude=52.23023;
+        var longitude=-0.88680;
+    }
     const map = new google.maps.Map(document.getElementById("map"), {
         zoom: 15,
-        center: { lat: 52.23023, lng: -0.88680 },
+        center: { lat: latitude, lng: longitude },
         mapId: "University Of Northampton",
     });
     const infoWindow = new google.maps.InfoWindow({
@@ -57,13 +64,11 @@ async function initMap(locations) {
 }
 
 async function specificIncidentMap(locations) {
-    
-    
-    // Request needed libraries.
     const { Map, InfoWindow } = await google.maps.importLibrary("maps");
     const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary(
         "marker",
     );
+
     const map = new google.maps.Map(document.getElementById("map"), {
         zoom: 15,
         center: { lat: userlocation.lat, lng: userlocation.lng },
@@ -78,16 +83,24 @@ async function specificIncidentMap(locations) {
     directionsRenderer=new google.maps.DirectionsRenderer();
     directionsRenderer.setMap(map);
 
-    var start = new google.maps.LatLng(52.23023, -0.88680);
+    if(userlocation.lat!=null && userlocation.lng!=null){
+        var latitude=userlocation.lat;
+        var longitude=userlocation.lng;
+    }else{
+        var latitude=52.23023;
+        var longitude=-0.88680;
+    }
+
+    var start = new google.maps.LatLng(latitude, longitude);
     var end = new google.maps.LatLng(locations[0].lat, locations[0].lng);
 
-    calcRoute(start,end);
+    calcRoute(start,end,true);
 
 
 
 }
 
-function calcRoute(origin,destination){
+function calcRoute(origin,destination,show){
     directionsService
     .route({
       origin: origin,
@@ -96,12 +109,14 @@ function calcRoute(origin,destination){
       avoidTolls: true,
     })
     .then((result) => {
-        directionsRenderer.setDirections(result);
+        if(show){
+            directionsRenderer.setDirections(result);
+        }     
             //calculate route distatnce
         const directions = directionsRenderer.getDirections();
 
         if (directions) {
-        computeTotalDistance(directions);
+            return computeTotalDistance(directions);
         }
     })
     .catch((e) => {
@@ -124,11 +139,21 @@ function computeTotalDistance(result) {
     total = total / 1000;
     
     document.getElementById("grid-distance").value = total + " km";
+    return total;
   }
 
+
 $(document).ready(function(){
-    
+
     var incidents=[];
+    if(userlocation.lat!=null && userlocation.lng!=null){
+        var latitude=userlocation.lat;
+        var longitude=userlocation.lng;
+    }else{
+        var latitude=52.23023;
+        var longitude=-0.88680;
+    }
+
     if (window.location.href.indexOf("map") > -1) {
         // Code to run on the specific page
             onValue( firebaseFunction.getAll(), (snapshot) => {
@@ -138,15 +163,21 @@ $(document).ready(function(){
                 
                 // Create a location object with the desired structure
                 if(childSnapshot.val().status=='Reported'){
-                    const incident  = {
-                    key:childSnapshot.key,
-                    lat: childSnapshot.val().latitude,
-                    lng: childSnapshot.val().longitude,
-                    title: childSnapshot.val().title,
+                
                     
-                    description: childSnapshot.val().description,
+                    if(isLocationWithin5km(latitude,longitude,childSnapshot.val().latitude,childSnapshot.val().longitude) || userlocation.role=='admin'){
+                        const incident  = {
+                            key:childSnapshot.key,
+                            lat: childSnapshot.val().latitude,
+                            lng: childSnapshot.val().longitude,
+                            title: childSnapshot.val().title,
+                            
+                            description: childSnapshot.val().description,
+                    }
+
                 };
-                incidents.push(incident);}
+                incidents.push(incident);
+             }   
                 
             // Push the location object into the locations array
                 
@@ -162,14 +193,18 @@ $(document).ready(function(){
             for (var key in locations) {
                 if (locations.hasOwnProperty(key)) {
                     var location = locations[key];
-                        var incident = {
-                            key: location.key,
-                            lat: location.lat,
-                            lng: location.lng,
-                            title: location.title,
-                            
-                            description: location.description,
-                        };
+                        if(location.status=='Reported'){
+                            if(isLocationWithin5km(latitude,longitude,location.lat,location.lng)||userlocation.role=='admin'){
+                                var incident = {
+                                    key: location.key,
+                                    lat: location.lat,
+                                    lng: location.lng,
+                                    title: location.title,
+                                    
+                                    description: location.description,
+                                };
+                            }
+                        }
                     }
                     incidents.push(incident);
             }
@@ -221,6 +256,31 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
     });
+
+// Function to convert degrees to radians
+function toRadians(degrees) {
+    return degrees * Math.PI / 180;
+  }
+  
+  // Function to calculate the distance between two points on the Earth
+  function calculateDistance(lat1, lon1, lat2, lon2) {
+    var R = 6371; // Radius of the Earth in km
+    var dLat = toRadians(lat2 - lat1);
+    var dLon = toRadians(lon2 - lon1);
+    var rLat1 = toRadians(lat1);
+    var rLat2 = toRadians(lat2);
+  
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(rLat1) * Math.cos(rLat2); 
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
+    var distance = R * c; // Distance in km
+    return distance;
+  }
+  
+  // Function to check if the other location is within 5 km of the user's location
+  function isLocationWithin5km(userLat, userLng, otherLat, otherLng) {
+    return calculateDistance(userLat, userLng, otherLat, otherLng) <= 5;
+  }
 
 
 

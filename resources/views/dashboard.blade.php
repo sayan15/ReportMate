@@ -16,11 +16,9 @@
             class="p-3 mr-4 text-green-500 bg-green-100 rounded-full dark:text-green-100 dark:bg-green-500"
           >
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fill-rule="evenodd"
-                d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
-                clip-rule="evenodd"
-              ></path>
+              <path fill-rule="evenodd" clip-rule="evenodd" 
+        d="M12 1L1 21h22L12 1zm1 14v-4h-2v4h2zm0 2v-2h-2v2h2z" 
+        fill="#FFED00"/>
             </svg>
           </div>
           <div>
@@ -120,7 +118,7 @@
       </div>
 
     
-      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div class="relative overflow-x-auto overflow-y-auto shadow-md sm:rounded-lg" style="max-height: 400px;">
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
