@@ -1,12 +1,66 @@
 {
+  "_firebaseDataService-b9ec618d.js": {
+    "file": "assets/firebaseDataService-b9ec618d.js",
+    "imports": [
+      "_index-4528e4e7.js"
+    ]
+  },
+  "_index-4528e4e7.js": {
+    "file": "assets/index-4528e4e7.js"
+  },
   "resources/css/app.css": {
-    "file": "assets/app-934d2bad.css",
+    "file": "assets/app-159a210d.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
+  "resources/css/tailwind.output.css": {
+    "file": "assets/tailwind.output-39284e2f.css",
+    "isEntry": true,
+    "src": "resources/css/tailwind.output.css"
+  },
   "resources/js/app.js": {
-    "file": "assets/app-87fccfb9.js",
+    "file": "assets/app-1f1ab1d4.js",
+    "imports": [
+      "_firebaseDataService-b9ec618d.js",
+      "_index-4528e4e7.js"
+    ],
     "isEntry": true,
     "src": "resources/js/app.js"
+  },
+  "resources/js/createUser.js": {
+    "file": "assets/createUser-0702b689.js",
+    "isEntry": true,
+    "src": "resources/js/createUser.js"
+  },
+  "resources/js/dashboard.js": {
+    "file": "assets/dashboard-d4cf9d45.js",
+    "imports": [
+      "_firebaseDataService-b9ec618d.js",
+      "_index-4528e4e7.js"
+    ],
+    "isEntry": true,
+    "src": "resources/js/dashboard.js"
+  },
+  "resources/js/firebaseMessagingService.js": {
+    "file": "assets/firebaseMessagingService-ec6eadf5.js",
+    "imports": [
+      "_index-4528e4e7.js"
+    ],
+    "isEntry": true,
+    "src": "resources/js/firebaseMessagingService.js"
+  },
+  "resources/js/map.js": {
+    "file": "assets/map-2920c646.js",
+    "imports": [
+      "_firebaseDataService-b9ec618d.js",
+      "_index-4528e4e7.js"
+    ],
+    "isEntry": true,
+    "src": "resources/js/map.js"
+  },
+  "resources/js/report.js": {
+    "file": "assets/report-388dbe1d.js",
+    "isEntry": true,
+    "src": "resources/js/report.js"
   }
 }
